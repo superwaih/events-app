@@ -1,10 +1,10 @@
 export interface TicketCounts {
   total: number;
   available: number;
-  vip_available: number;
-  regular_available: number;
-  vip_total: number;
-  regular_total: number;
+  // vip_available: number;
+  // regular_available: number;
+  // vip_total: number;
+  // regular_total: number;
 }
 
 export interface EventDetails {
