@@ -19,7 +19,7 @@ export default function EventBooking() {
   );
 
   return (
-    <div className="bg-amber-50 min-h-screen bg-gradient-to-br from-amber-50 via-amber-50 to-emerald-50">
+    <div className="min-h-screen bg-white">
       <EventHeader />
 
       <div className="max-w-7xl mx-auto px-5 py-8">
