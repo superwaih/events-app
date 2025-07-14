@@ -4,6 +4,7 @@ import { AlertTriangle } from 'lucide-react';
 import { TicketCounts } from '@/types/indext';
 import { EventRegistrationForm } from '@/utils/schemas';
 import { FormField } from './form-field';
+import { useState } from 'react';
 
 interface RegistrationFormProps {
   form: UseFormReturn<EventRegistrationForm>;
@@ -20,6 +21,7 @@ export function RegistrationForm({
 }: RegistrationFormProps) {
   const { register, handleSubmit, formState: { errors }, watch } = form;
   const hasAllergies = watch('hasAllergies');
+  const [agreedToTerms, setAgree] = useState(false)
 
   return (
     <div className="bg-amber-50 border border-emerald-200 rounded-lg shadow-md overflow-hidden">
@@ -35,7 +37,6 @@ export function RegistrationForm({
       <div className="p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           
-          {/* Personal Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField 
               label="Full name" 
@@ -166,12 +167,14 @@ export function RegistrationForm({
 
           {/* Terms */}
           <div className={`bg-emerald-50 p-4 rounded-md border ${
-            errors.agreedToTerms ? 'border-red-500' : 'border-emerald-200'
+            !agreedToTerms ? 'border-red-500' : 'border-emerald-200'
           }`}>
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
-                {...register('agreedToTerms')}
+defaultValue={agreedToTerms}
+onChange={() => setAgree(!agreedToTerms)}
+
                 className="mt-0.5 text-emerald-600 focus:ring-emerald-500"
               />
               <div className="text-sm text-emerald-700">
@@ -189,10 +192,10 @@ export function RegistrationForm({
                 </div>
               </div>
             </label>
-            {errors.agreedToTerms && (
+            {!agreedToTerms && (
               <p className="text-red-600 text-xs mt-2 flex items-center gap-1">
                 <AlertTriangle className="w-3 h-3" />
-                {errors.agreedToTerms.message}
+               Please Kindly Agree to terms
               </p>
             )}
           </div>

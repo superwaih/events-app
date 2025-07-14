@@ -19,7 +19,6 @@ export function useEventRegistration(ticketCounts: TicketCounts, onSuccess: () =
       pairingChoice: undefined,
       hasAllergies: 'no',
       allergies: '',
-      agreedToTerms: false
     }
   });
 
@@ -36,19 +35,31 @@ export function useEventRegistration(ticketCounts: TicketCounts, onSuccess: () =
         return;
       }
 
-      const inviteCode = `CE${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+    // ✅ Force null for allergies if 'no'
+    const hasAllergies = data.hasAllergies === 'yes';
+   const allergies = hasAllergies && (data.allergies ?? '').trim() !== ''
+  ? (data.allergies ?? '').trim()
+  : "none";
 
-      const registrationData = {
-        full_name: data.fullName,
-        email: data.email,
-        phone: data.phone,
-        pairing_choice: data.pairingChoice,
-        allergies: data.hasAllergies === 'yes' ? data.allergies : null,
-        invite_code: inviteCode,
-        registration_date: new Date().toISOString(),
-        payment_status: 'pending'
-      };
+    const inviteCode = `CE${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
 
+const registrationData = {
+  full_name: data.fullName,
+  email: data.email,
+  phone: data.phone,
+  pairing_choice: data.pairingChoice,
+  has_allergies: data.hasAllergies, // ✅ string: 'yes' or 'no'
+  allergies:
+    data.hasAllergies === 'yes' && (data.allergies ?? '').trim() !== ''
+      ? (data.allergies ?? '').trim()
+      : "N/A",
+  invite_code: inviteCode,
+  registration_date: new Date().toISOString(),
+  payment_status: 'pending',
+  agreed_to_terms: true
+};
+
+    console.log('Data to submit:', registrationData);
       const { error } = await supabase
         .from('registrations')
         .insert([registrationData]);

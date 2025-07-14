@@ -10,10 +10,7 @@ export const eventRegistrationSchema = z.object({
   hasAllergies: z.enum(['yes', 'no'], {
     required_error: "Please specify if you have allergies"
   }),
-  allergies: z.string().optional(),
-  agreedToTerms: z.boolean().refine(val => val === true, {
-    message: "You must agree to the terms and conditions"
-  })
+ allergies: z.string().optional()
 }).refine((data) => {
   if (data.hasAllergies === 'yes' && (!data.allergies || data.allergies.trim() === '')) {
     return false;
@@ -23,5 +20,6 @@ export const eventRegistrationSchema = z.object({
   message: "Please specify your allergies or dietary restrictions",
   path: ['allergies']
 });
+
 
 export type EventRegistrationForm = z.infer<typeof eventRegistrationSchema>;
