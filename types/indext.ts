@@ -1,4 +1,5 @@
 export interface TicketCounts {
+  total: number;
   available: number;
   vip_available: number;
   regular_available: number;
