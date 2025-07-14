@@ -1,0 +1,230 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Eventbrite Design System Variables */
+:root {
+  font-size: 16px;
+  
+  /* Button Variables */
+  --SmallButtonHeight: 24px;
+  --MediumButtonHeight: 32px;
+  --LargeButtonHeight: 44px;
+  --SmallButtonPadding: 0 8px;
+  --MediumButtonPadding: 0 20px;
+  --LargeButtonPadding: 0 32px;
+  --ButtonBorderRadius: 4px;
+  --ButtonBorderWidth: 2px;
+  --ButtonBorderColor: #a9a8b3;
+  --ButtonTextColor: #1e0a3c;
+  --ButtonBackgroundColor: #fff;
+  --ButtonBackgroundColorHover: #f8f7fa;
+  --ButtonBorderColorHover: #6f7287;
+  --ButtonBackgroundColorActive: #eeedf2;
+  --ButtonBorderColorActive: #6f7287;
+  --ButtonFocusOutline: #585163;
+  --ButtonPrimaryBackgroundColor: #d1410c;
+  --ButtonPrimaryTextColor: #fff;
+  --ButtonPrimaryBackgroundColorHover: #9f2c15;
+  --ButtonPrimaryBackgroundColorActive: #bd3a20;
+  --ButtonPrimaryBackgroundColorDisabled: #f8f7fa;
+  --ButtonTextColorDisabled: #a9a8b3;
+  --ButtonSecondaryBackgroundColorDisabled: #fff;
+  --ButtonSecondaryBorderColorDisabled: #eeedf2;
+  --ButtonGhostTextColor: #3659e3;
+  --ButtonGhostTextColorHover: #3659e3;
+  --ButtonGhostTextColorActive: #304fc9;
+  --ButtonGhostBackgroundColorHover: #f8f7fa;
+  --ButtonGhostBackgroundColorActive: #eeedf2;
+  --ButtonGhostBorderColorHover: #f8f7fa;
+  --ButtonGhostBorderColorActive: #eeedf2;
+  
+  /* Color System */
+  --eds-ui-800: #39364f;
+  --eds-ui-700: #585163;
+  --eds-ui-600: #6f7287;
+  --eds-ui-500: #a9a8b3;
+  --eds-ui-400: #c7c5d0;
+  --eds-ui-300: #eeedf2;
+  --eds-ui-200: #f8f7fa;
+  --eds-ui-100: #fefefe;
+  
+  /* Semantic Colors */
+  --eds-orange-600: #d1410c;
+  --eds-orange-700: #9f2c15;
+  --eds-orange-800: #bd3a20;
+  --eds-blue-600: #3659e3;
+  --eds-blue-700: #304fc9;
+  --eds-green-600: #00ab55;
+  --eds-red-600: #e53e3e;
+}
+
+@layer base {
+  body {
+    font-family: 'Neue Plak', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial', sans-serif;
+    font-weight: 400;
+    color: var(--eds-ui-800);
+    background-color: var(--eds-ui-100);
+    line-height: 1.5;
+  }
+}
+
+/* Custom Button Styles */
+.btn-primary {
+  height: var(--LargeButtonHeight);
+  padding: var(--LargeButtonPadding);
+  border-radius: var(--ButtonBorderRadius);
+  background-color: var(--ButtonPrimaryBackgroundColor);
+  color: var(--ButtonPrimaryTextColor);
+  border: var(--ButtonBorderWidth) solid var(--ButtonPrimaryBackgroundColor);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--ButtonPrimaryBackgroundColorHover);
+  border-color: var(--ButtonPrimaryBackgroundColorHover);
+}
+
+.btn-primary:active {
+  background-color: var(--ButtonPrimaryBackgroundColorActive);
+  border-color: var(--ButtonPrimaryBackgroundColorActive);
+}
+
+.btn-primary:disabled {
+  background-color: var(--ButtonPrimaryBackgroundColorDisabled);
+  color: var(--ButtonTextColorDisabled);
+  border-color: var(--ButtonSecondaryBorderColorDisabled);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  height: var(--LargeButtonHeight);
+  padding: var(--LargeButtonPadding);
+  border-radius: var(--ButtonBorderRadius);
+  background-color: var(--ButtonBackgroundColor);
+  color: var(--ButtonTextColor);
+  border: var(--ButtonBorderWidth) solid var(--ButtonBorderColor);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--ButtonBackgroundColorHover);
+  border-color: var(--ButtonBorderColorHover);
+}
+
+.btn-ghost {
+  height: var(--MediumButtonHeight);
+  padding: var(--MediumButtonPadding);
+  border-radius: var(--ButtonBorderRadius);
+  background-color: transparent;
+  color: var(--ButtonGhostTextColor);
+  border: var(--ButtonBorderWidth) solid transparent;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background-color: var(--ButtonGhostBackgroundColorHover);
+  border-color: var(--ButtonGhostBorderColorHover);
+}
+
+/* Form Styles */
+.form-input {
+  height: 44px;
+  padding: 0 16px;
+  border: 2px solid var(--eds-ui-400);
+  border-radius: var(--ButtonBorderRadius);
+  font-size: 16px;
+  color: var(--eds-ui-800);
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--eds-blue-600);
+  box-shadow: 0 0 0 1px var(--eds-blue-600);
+}
+
+.form-input::placeholder {
+  color: var(--eds-ui-500);
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--eds-ui-800);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.form-textarea {
+  min-height: 88px;
+  padding: 12px 16px;
+  border: 2px solid var(--eds-ui-400);
+  border-radius: var(--ButtonBorderRadius);
+  font-size: 16px;
+  color: var(--eds-ui-800);
+  background-color: #fff;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--eds-blue-600);
+  box-shadow: 0 0 0 1px var(--eds-blue-600);
+}
+
+/* Card Styles */
+.card {
+  background-color: #fff;
+  border: 1px solid var(--eds-ui-300);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(57, 54, 79, 0.08);
+}
+
+.card-header {
+  padding: 24px 24px 0;
+}
+
+.card-content {
+  padding: 24px;
+}
+
+/* Badge Styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-success {
+  background-color: #e6f7ed;
+  color: var(--eds-green-600);
+}
+
+.badge-error {
+  background-color: #fef2f2;
+  color: var(--eds-red-600);
+}
+
+.badge-warning {
+  background-color: #fef7e6;
+  color: var(--eds-orange-600);
+}
+
+.badge-info {
+  background-color: #eff6ff;
+  color: var(--eds-blue-600);
+}
