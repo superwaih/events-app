@@ -172,8 +172,8 @@ export function RegistrationForm({
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
-defaultValue={agreedToTerms}
-onChange={() => setAgree(!agreedToTerms)}
+ checked={agreedToTerms}
+  onChange={() => setAgree(!agreedToTerms)}
 
                 className="mt-0.5 text-emerald-600 focus:ring-emerald-500"
               />
