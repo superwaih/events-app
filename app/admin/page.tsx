@@ -114,135 +114,136 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-teal-50">
-      <header className="bg-white shadow-sm border-b-2 border-orange-200">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-teal-600 bg-clip-text text-transparent">
-                Admin Dashboard
-              </h1>
-              <p className="text-gray-600 mt-1">An Evening of Culinary Experience</p>
-            </div>
-            <Button
-              onClick={fetchData}
-              disabled={isLoading}
-              className="bg-gradient-to-r from-orange-500 to-teal-500 hover:from-orange-600 hover:to-teal-600"
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-          </div>
+    <div className="min-h-screen bg-black text-white font-sans">
+    <header className="border-b border-white/10 px-6 py-4">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-semibold text-white">Admin Dashboard</h1>
+          <p className="text-white/40 text-sm mt-1">An Evening of Culinary Experience</p>
         </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* The rest of the component remains unchanged */}
-        <Card className="mb-6 shadow-lg">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4 items-center">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    placeholder="Search by name, email, phone, or invite code..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Badge variant="outline" className="text-sm">
-                  {filteredRegistrations.length} results
-                </Badge>
-                {statistics.allergies_count > 0 && (
-                  <Badge variant="destructive" className="text-sm">
-                    <AlertTriangle className="h-3 w-3 mr-1" />
-                    {statistics.allergies_count} allergies
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle className="text-xl">Registration Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="all" className="w-full">
-              <TabsContent value="all" className="space-y-4">
-                <div className="space-y-4">
-                  {filteredRegistrations.map((registration) => (
-                    <Card key={registration.id} className="border-gray-200">
-                      <CardContent className="p-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <Users className="h-4 w-4 text-gray-500" />
-                              <span className="font-medium">{registration.full_name}</span>
-                              {registration.ticket_type && (
-                                <Badge variant="secondary">
-                                  {registration.ticket_type.toUpperCase()}
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <Mail className="h-3 w-3" />
-                              <span>{registration.email}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <Phone className="h-3 w-3" />
-                              <span>{registration.phone}</span>
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-sm">
-                              <Wine className="h-3 w-3 text-purple-500" />
-                              <span>{registration.pairing_choice === 'wine' ? 'Wine' : 'Juice'} Pairing</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <Calendar className="h-3 w-3 text-blue-500" />
-                              <span>{formatDate(registration.registration_date)}</span>
-                            </div>
-                            <div className="text-sm">
-                              <span className="font-medium">Invite Code: </span>
-                              <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                                {registration.invite_code}
-                              </code>
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Badge
-                              variant={registration.payment_status === 'paid' ? 'default' : 'destructive'}
-                              className="w-fit"
-                            >
-                              {registration.payment_status === 'paid' ? 'Paid' : 'Pending Payment'}
-                            </Badge>
-                            {registration.allergies && (
-                              <div className="bg-red-50 border border-red-200 rounded p-2">
-                                <div className="flex items-center gap-1 text-sm text-red-700">
-                                  <AlertTriangle className="h-3 w-3" />
-                                  <span className="font-medium">Allergies:</span>
-                                </div>
-                                <p className="text-sm text-red-600 mt-1">{registration.allergies}</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+        <Button
+          onClick={fetchData}
+          disabled={isLoading}
+          className="bg-white rounded-[8px] text-black hover:bg-white/90 transition"
+        >
+          <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+          Refresh
+        </Button>
       </div>
+    </header>
+
+    <div className="max-w-7xl mx-auto px-6 py-10 space-y-6">
+      <Card className="bg-white/5 border border-white/10 shadow-none">
+        <CardContent className="p-5">
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-white/40" />
+              <Input
+                placeholder="Search by name, email, phone, or invite code..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-white/5 text-white border-white/20 focus:ring-white/10"
+              />
+            </div>
+            <div className="flex gap-2 items-center">
+              <Badge className="bg-white/10 text-white border-white/10">
+                {filteredRegistrations.length} results
+              </Badge>
+              {statistics.allergies_count > 0 && (
+                <Badge className="bg-red-500/20 text-red-400 border-red-400/30">
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  {statistics.allergies_count} allergies
+                </Badge>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-white/5 border border-white/10 shadow-none">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">Registration Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="all" className="w-full">
+            <TabsContent value="all" className="space-y-4">
+              {filteredRegistrations.map((registration) => (
+                <Card
+                  key={registration.id}
+                  className="bg-white/5 border border-white/10 transition hover:border-white/20"
+                >
+                  <CardContent className="p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {/* Full name + ticket */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-white">
+                          <Users className="h-4 w-4 text-white/40" />
+                          <span className="font-medium">{registration.full_name}</span>
+                          {registration.ticket_type && (
+                            <Badge className="bg-white/10 text-white/80 border-white/10 uppercase">
+                              {registration.ticket_type}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-sm text-white/60 flex items-center gap-2">
+                          <Mail className="h-3 w-3" />
+                          {registration.email}
+                        </div>
+                        <div className="text-sm text-white/60 flex items-center gap-2">
+                          <Phone className="h-3 w-3" />
+                          0{registration.phone}
+                        </div>
+                      </div>
+
+                      {/* Pairing + Date + Invite */}
+                      <div className="space-y-2">
+                        <div className="text-sm text-white/60 flex items-center gap-2">
+                          <Wine className="h-3 w-3" />
+                          {registration.pairing_choice === 'wine' ? 'Wine' : 'Juice'} Pairing
+                        </div>
+                        <div className="text-sm text-white/60 flex items-center gap-2">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(registration.registration_date)}
+                        </div>
+                        <div className="text-sm text-white/60">
+                          <span className="font-medium text-white">Invite Code: </span>
+                          <code className="bg-white/10 px-2 py-1 rounded text-xs font-mono">
+                            {registration.invite_code}
+                          </code>
+                        </div>
+                      </div>
+
+                      {/* Payment status + allergies */}
+                      <div className="space-y-2">
+                        <Badge
+                          className={`w-fit px-3 py-1 border ${
+                            registration.payment_status === 'paid'
+                              ? 'bg-green-600/30 border-green-500 text-green-300'
+                              : 'bg-red-600/30 border-red-500 text-red-300'
+                          }`}
+                        >
+                          {registration.payment_status === 'paid' ? 'Paid' : 'Pending Payment'}
+                        </Badge>
+
+                        {registration.allergies && (
+                          <div className="bg-red-500/10 border border-red-400/20 rounded p-2">
+                            <div className="text-sm text-red-300 flex items-center gap-1">
+                              <AlertTriangle className="h-3 w-3" />
+                              <span className="font-medium">Allergies:</span>
+                            </div>
+                            <p className="text-sm text-red-300 mt-1">{registration.allergies}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>
+  </div>
   );
 }

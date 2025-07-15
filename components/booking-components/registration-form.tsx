@@ -109,7 +109,7 @@ export function RegistrationForm({
               }`}
             >
               <option value="">Select your preferred pairing</option>
-              <option value="wine">Wine Pairing</option>
+              <option value="wine">Wine Pairing (Alcholic)</option>
               <option value="juice">Juice Pairing</option>
             </select>
           </FormField>

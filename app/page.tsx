@@ -17,7 +17,6 @@ export default function EventBooking() {
     ticketCounts, 
     refetchTicketCounts
   );
-console.log(ticketCounts)
   return (
     <div className="min-h-screen bg-white">
       <EventHeader />

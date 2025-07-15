@@ -32,7 +32,7 @@ export function PaymentInformation() {
                 Bank
               </div>
               <div className="text-sm font-semibold text-emerald-900">
-                Guarantee Trust Bank
+                Guaranty trust bank 
               </div>
             </div>
           </div>
