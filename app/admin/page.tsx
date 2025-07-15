@@ -25,7 +25,7 @@ interface Registration {
   full_name: string;
   email: string;
   phone: string;
-  ticket_type?: string; // made optional and general
+  ticket_type?: string; 
   pairing_choice: 'wine' | 'juice';
   allergies: string | null;
   invite_code: string;
