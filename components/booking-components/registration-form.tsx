@@ -215,7 +215,7 @@ export function RegistrationForm({
               ? 'Processing Registration...' 
               : ticketCounts.available === 0 
                 ? 'Event Sold Out' 
-                : 'Register'
+                : 'Book'
             }
           </button>
         </form>
