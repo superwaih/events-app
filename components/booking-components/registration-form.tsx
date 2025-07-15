@@ -109,7 +109,7 @@ export function RegistrationForm({
               }`}
             >
               <option value="">Select your preferred pairing</option>
-              <option value="wine">Wine Pairing (Alcholic)</option>
+              <option value="wine">Wine Pairing (Alcoholic)</option>
               <option value="juice">Juice Pairing</option>
             </select>
           </FormField>
@@ -215,7 +215,7 @@ export function RegistrationForm({
               ? 'Processing Registration...' 
               : ticketCounts.available === 0 
                 ? 'Event Sold Out' 
-                : 'Book'
+                : 'Book Ticket'
             }
           </button>
         </form>
