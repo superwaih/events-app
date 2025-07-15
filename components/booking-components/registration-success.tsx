@@ -21,7 +21,7 @@ export const RegistrationSuccessModal = ({
   const handleCopy = async () => {
     await navigator.clipboard.writeText("0246160583");
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // reset after 2s
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -41,9 +41,12 @@ export const RegistrationSuccessModal = ({
           <p>
             <span className="font-medium text-emerald-700">Note:</span> Attendance will only be confirmed after successful payment.
           </p>
+          <p className="text-[13px] text-red-600">
+            <strong>Note:</strong> attendance will only be confirmed after successful payment is made within <strong>24hrs</strong>. If not, it’s <strong>void</strong>.
+          </p>
         </div>
 
-        {/* Inline Payment Information */}
+        {/* Payment Info */}
         <div className="bg-amber-50 border border-emerald-200 rounded-lg p-4 space-y-4">
           <div>
             <h4 className="text-sm font-semibold text-emerald-900 mb-2">
@@ -59,7 +62,6 @@ export const RegistrationSuccessModal = ({
                   <button
                     onClick={handleCopy}
                     className="flex items-center text-xs text-emerald-700 hover:text-emerald-900"
-                    title="Copy account number"
                   >
                     <Copy className="w-4 h-4 mr-1" />
                     {copied ? "Copied!" : "Copy"}

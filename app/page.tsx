@@ -14,7 +14,7 @@ import { useState } from "react";
 
 
 export default function EventBooking() {
-  const [inviteCode, setInviteCode] = useState('abc');
+  const [inviteCode, setInviteCode] = useState('');
 const [modalOpen, setModalOpen] = useState(true);
   const { ticketCounts, refetchTicketCounts } = useTicketCounts();
 const { form, isSubmitting, onSubmit: handleSubmit } = useEventRegistration(
@@ -54,6 +54,9 @@ const { form, isSubmitting, onSubmit: handleSubmit } = useEventRegistration(
         {/* Mobile Layout */}
         <div className="lg:hidden space-y-6">
           <EventHero eventDetails={EVENT_DETAILS} />
+                    <PaymentInformation />
+          <EventFeatures />
+
           <TicketAvailability ticketCounts={ticketCounts} />
           <RegistrationForm
             form={form}
@@ -62,8 +65,6 @@ const { form, isSubmitting, onSubmit: handleSubmit } = useEventRegistration(
               onSubmit={handleSubmit}
 
           />
-          <PaymentInformation />
-          <EventFeatures />
 
           <RegistrationSuccessModal
   isOpen={modalOpen}
