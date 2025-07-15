@@ -15,7 +15,7 @@ import { useState } from "react";
 
 export default function EventBooking() {
   const [inviteCode, setInviteCode] = useState('');
-const [modalOpen, setModalOpen] = useState(true);
+const [modalOpen, setModalOpen] = useState(false);
   const { ticketCounts, refetchTicketCounts } = useTicketCounts();
 const { form, isSubmitting, onSubmit: handleSubmit } = useEventRegistration(
   ticketCounts, 
