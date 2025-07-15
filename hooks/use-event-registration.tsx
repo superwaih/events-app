@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { TicketCounts } from '@/types/indext';
 import { EventRegistrationForm, eventRegistrationSchema } from '@/utils/schemas';
 
-export function useEventRegistration(ticketCounts: TicketCounts, onSuccess: () => void) {
+export function useEventRegistration(ticketCounts: TicketCounts, onSuccess: () => void,   setInviteCode?: (code: string) => void) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -59,7 +59,7 @@ const registrationData = {
   agreed_to_terms: true
 };
 
-    console.log('Data to submit:', registrationData);
+
       const { error } = await supabase
         .from('registrations')
         .insert([registrationData]);
@@ -70,7 +70,8 @@ const registrationData = {
         title: "Registration Successful!",
         description: `Your invite code is: ${inviteCode}. Please save this code and proceed with payment.`,
       });
-
+// setInviteCode(inviteCode);
+setInviteCode?.(inviteCode);
       form.reset();
       onSuccess();
 

@@ -5,18 +5,26 @@ import { EventHeader } from "@/components/booking-components/event-header";
 import { EventHero } from "@/components/booking-components/event-hero";
 import { PaymentInformation } from "@/components/booking-components/payment-information";
 import { RegistrationForm } from "@/components/booking-components/registration-form";
+import { RegistrationSuccessModal } from "@/components/booking-components/registration-success";
 import { TicketAvailability } from "@/components/booking-components/ticket-availability";
 import { useEventRegistration } from "@/hooks/use-event-registration";
 import { useTicketCounts } from "@/hooks/use-ticket-count";
 import { EVENT_DETAILS } from "@/utils/constants";
+import { useState } from "react";
 
 
 export default function EventBooking() {
+  const [inviteCode, setInviteCode] = useState('abc');
+const [modalOpen, setModalOpen] = useState(true);
   const { ticketCounts, refetchTicketCounts } = useTicketCounts();
-  const { form, isSubmitting, onSubmit } = useEventRegistration(
-    ticketCounts, 
-    refetchTicketCounts
-  );
+const { form, isSubmitting, onSubmit: handleSubmit } = useEventRegistration(
+  ticketCounts, 
+  () => {
+    refetchTicketCounts();
+    setModalOpen(true);
+  },
+  setInviteCode 
+);
   return (
     <div className="min-h-screen bg-white">
       <EventHeader />
@@ -31,7 +39,7 @@ export default function EventBooking() {
               form={form}
               isSubmitting={isSubmitting}
               ticketCounts={ticketCounts}
-              onSubmit={onSubmit}
+              onSubmit={handleSubmit}
             />
           </div>
 
@@ -51,10 +59,17 @@ export default function EventBooking() {
             form={form}
             isSubmitting={isSubmitting}
             ticketCounts={ticketCounts}
-            onSubmit={onSubmit}
+              onSubmit={handleSubmit}
+
           />
           <PaymentInformation />
           <EventFeatures />
+
+          <RegistrationSuccessModal
+  isOpen={modalOpen}
+  inviteCode={inviteCode}
+  onClose={() => setModalOpen(false)}
+/>
         </div>
       </div>
     </div>
