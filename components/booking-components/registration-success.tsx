@@ -38,12 +38,13 @@ export const RegistrationSuccessModal = ({
           <p>
             Your invite code is: <span className="font-bold">{inviteCode}</span>
           </p>
-          <p>
-            <span className="font-medium text-emerald-700">Note:</span> Attendance will only be confirmed after successful payment.
+          <p className="text-justify">
+            <span className="font-medium  text-emerald-700">Note:</span> attendance will only be confirmed after successful payment is made within 24hrs. if not, it&apos;s Void. An email will be sent to you for verification. 
+
           </p>
-          <p className="text-[13px] text-red-600">
+          {/* <p className="text-[13px] text-red-600">
             <strong>Note:</strong> attendance will only be confirmed after successful payment is made within <strong>24hrs</strong>. If not, it’s <strong>void</strong>.
-          </p>
+          </p> */}
         </div>
 
         {/* Payment Info */}
