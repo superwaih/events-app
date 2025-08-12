@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
@@ -17,6 +18,8 @@ import {
   RefreshCw,
   Search,
   Loader2,
+  Send,
+  CreditCard,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
@@ -54,6 +57,7 @@ interface Statistics {
   allergies_count: number;
 }
 
+const EVENT_DATE = 'Friday, August 29th, 2025 at 8:00 PM'
 export default function AdminDashboard() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [statistics, setStatistics] = useState<Statistics>({
@@ -68,16 +72,19 @@ export default function AdminDashboard() {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [sendingEmails, setSendingEmails] = useState<Set<string>>(new Set());
+  const [sendingPaymentReminders, setSendingPaymentReminders] = useState<Set<string>>(new Set());
 
   // dialog state
   const [confirmTarget, setConfirmTarget] = useState<Registration | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  
+  // email editing state
+  const [emailEditTarget, setEmailEditTarget] = useState<Registration | null>(null);
+  const [emailContent, setEmailContent] = useState("");
+  const [emailType, setEmailType] = useState<"reminder" | "payment">("reminder");
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data: registrations, error } = await supabase
@@ -90,7 +97,6 @@ export default function AdminDashboard() {
       setRegistrations(registrations || []);
       calculateStatistics(registrations || []);
     } catch (error) {
-      console.error("Error fetching data:", error);
       toast({
         title: "Failed to fetch registrations.",
         variant: "destructive",
@@ -98,7 +104,11 @@ export default function AdminDashboard() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const calculateStatistics = (data: Registration[]) => {
     const stats = {
@@ -151,6 +161,197 @@ export default function AdminDashboard() {
     }
   };
 
+  const sendEmailReminder = async (registration: Registration) => {
+    setSendingEmails(prev => new Set(prev).add(registration.id));
+    
+    try {
+      const response = await fetch('/api/send-reminder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: registration.email,
+          fullName: registration.full_name,
+          inviteCode: registration.invite_code,
+          ticketType: registration.ticket_type,
+          pairingChoice: registration.pairing_choice,
+          eventDate: EVENT_DATE, // Update this with actual event date
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+
+      toast({
+        title: "Email reminder sent!",
+        description: `Reminder sent to ${registration.full_name} at ${registration.email}`,
+      });
+    } catch (error) {
+      console.error('Email sending error:', error);
+      toast({
+        title: "Failed to send email reminder",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingEmails(prev => {
+        const updated = new Set(prev);
+        updated.delete(registration.id);
+        return updated;
+      });
+    }
+  };
+
+  const sendPaymentReminder = async (registration: Registration) => {
+    setSendingPaymentReminders(prev => new Set(prev).add(registration.id));
+    
+    try {
+      const response = await fetch('/api/send-payment-reminder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: registration.email,
+          fullName: registration.full_name,
+          inviteCode: registration.invite_code,
+          ticketType: registration.ticket_type,
+          pairingChoice: registration.pairing_choice,
+          eventDate: EVENT_DATE // Update this with actual event date
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send payment reminder');
+      }
+
+      toast({
+        title: "Payment reminder sent!",
+        description: `Payment reminder sent to ${registration.full_name} at ${registration.email}`,
+      });
+    } catch (error) {
+      console.error('Payment reminder sending error:', error);
+      toast({
+        title: "Failed to send payment reminder",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingPaymentReminders(prev => {
+        const updated = new Set(prev);
+        updated.delete(registration.id);
+        return updated;
+      });
+    }
+  };
+
+  // Email editor functions
+  const openEmailEditor = (registration: Registration, type: "reminder" | "payment") => {
+    setEmailEditTarget(registration);
+    setEmailType(type);
+    
+    // Set default content based on email type
+    if (type === "reminder") {
+      setEmailContent(`Dear ${registration.full_name},
+
+This is a friendly reminder about your upcoming event registration.
+
+Event Details:
+- Name: ${registration.full_name}
+- Ticket Type: ${registration.ticket_type}
+- Invite Code: ${registration.invite_code}
+- Pairing Choice: ${registration.pairing_choice}
+- Event Date: ${EVENT_DATE}
+
+Please keep this email for your records and bring your invite code to the event.
+
+If you have any questions, please don't hesitate to contact us.
+
+Best regards,
+The Event Team`);
+    } else {
+      setEmailContent(`Dear ${registration.full_name},
+
+⚠️ URGENT: Payment Required for Your Event Registration
+
+We noticed that your payment for the event registration is still pending.
+
+Registration Details:
+- Name: ${registration.full_name}
+- Ticket Type: ${registration.ticket_type}
+- Invite Code: ${registration.invite_code}
+
+IMPORTANT: Please complete your payment as soon as possible to secure your spot at the event.
+
+Payment Instructions:
+1. Use your invite code: ${registration.invite_code}
+2. Contact our payment team at [payment contact]
+3. Complete payment within 24 hours to avoid cancellation
+
+If you have already made the payment, please ignore this email or contact us with your payment confirmation.
+
+For immediate assistance, please contact us at [contact information].
+
+Best regards,
+The Event Team`);
+    }
+  };
+
+  const sendEditedEmail = async () => {
+    if (!emailEditTarget) return;
+    
+    const apiEndpoint = emailType === "reminder" ? "/api/send-reminder" : "/api/send-payment-reminder";
+    const sendingStateSetter = emailType === "reminder" ? setSendingEmails : setSendingPaymentReminders;
+    
+    sendingStateSetter(prev => new Set(prev).add(emailEditTarget.id));
+    
+    try {
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: emailEditTarget.email,
+          fullName: emailEditTarget.full_name,
+          inviteCode: emailEditTarget.invite_code,
+          ticketType: emailEditTarget.ticket_type,
+          pairingChoice: emailEditTarget.pairing_choice,
+          eventDate: EVENT_DATE,
+          customContent: emailContent, // Send custom content
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+
+      toast({
+        title: `${emailType === "reminder" ? "Email reminder" : "Payment reminder"} sent!`,
+        description: `Email sent to ${emailEditTarget.full_name} at ${emailEditTarget.email}`,
+      });
+      
+      // Close the dialog
+      setEmailEditTarget(null);
+      setEmailContent("");
+    } catch (error) {
+      console.error('Email sending error:', error);
+      toast({
+        title: `Failed to send ${emailType === "reminder" ? "email reminder" : "payment reminder"}`,
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      sendingStateSetter(prev => {
+        const updated = new Set(prev);
+        updated.delete(emailEditTarget.id);
+        return updated;
+      });
+    }
+  };
+
   const filteredRegistrations = registrations.filter(
     (reg) =>
       reg.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -171,7 +372,6 @@ export default function AdminDashboard() {
 
   return (
     <>
-      {/* Delete Confirmation Dialog */}
       <Dialog
         open={!!confirmTarget}
         onOpenChange={(open) => {
@@ -231,6 +431,63 @@ export default function AdminDashboard() {
             >
               {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Confirm Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Email Edit Dialog */}
+      <Dialog open={emailEditTarget !== null} onOpenChange={() => setEmailEditTarget(null)}>
+        <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-white">
+              {emailType === "reminder" ? "Edit Email Reminder" : "Edit Payment Reminder"}
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Review and customize the email content before sending to {emailEditTarget?.full_name} ({emailEditTarget?.email})
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-300 mb-2 block">
+                Email Content
+              </label>
+              <Textarea
+                value={emailContent}
+                onChange={(e) => setEmailContent(e.target.value)}
+                className="min-h-[300px] bg-zinc-800 border-zinc-700 text-white resize-none"
+                placeholder="Enter email content..."
+              />
+            </div>
+          </div>
+          
+          <DialogFooter className="mt-6 flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="border-white/20 text-white hover:bg-white/10"
+              onClick={() => setEmailEditTarget(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={sendEditedEmail}
+              disabled={
+                !emailContent.trim() ||
+                !!(
+                  emailEditTarget &&
+                  (sendingEmails.has(emailEditTarget.id) ||
+                    sendingPaymentReminders.has(emailEditTarget.id))
+                )
+              }
+            >
+              {emailEditTarget && (sendingEmails.has(emailEditTarget.id) || sendingPaymentReminders.has(emailEditTarget.id)) && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Send Email
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -375,8 +632,40 @@ export default function AdminDashboard() {
                           </div>
                         </div>
 
-                        {/* Delete button */}
-                        <div className="mt-4 flex justify-end">
+                        {/* Action buttons */}
+                        <div className="mt-4 flex justify-end gap-2">
+                          {/* Payment reminder button - only show for pending payments */}
+                          {registration.payment_status === "pending" && (
+                            <Button
+                              variant="outline"
+                              className="border-orange-500/30 text-orange-400 hover:bg-orange-500/10"
+                              onClick={() => openEmailEditor(registration, "payment")}
+                              disabled={sendingPaymentReminders.has(registration.id)}
+                            >
+                              {sendingPaymentReminders.has(registration.id) ? (
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              ) : (
+                                <CreditCard className="h-4 w-4 mr-2" />
+                              )}
+                              {sendingPaymentReminders.has(registration.id) ? 'Sending...' : 'Payment Reminder'}
+                            </Button>
+                          )}
+                          
+                          {/* General event reminder button */}
+                          <Button
+                            variant="outline"
+                            className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+                            onClick={() => openEmailEditor(registration, "reminder")}
+                            disabled={sendingEmails.has(registration.id)}
+                          >
+                            {sendingEmails.has(registration.id) ? (
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            ) : (
+                              <Send className="h-4 w-4 mr-2" />
+                            )}
+                            {sendingEmails.has(registration.id) ? 'Sending...' : 'Send Reminder'}
+                          </Button>
+                          
                           <Button
                             variant="destructive"
                             className="bg-red-600 hover:bg-red-700"
