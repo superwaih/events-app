@@ -45,7 +45,7 @@ const { form, isSubmitting, onSubmit: handleSubmit } = useEventRegistration(
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* <TicketAvailability ticketCounts={ticketCounts} /> */}
+            <TicketAvailability ticketCounts={ticketCounts} />
             <PaymentInformation />
             <EventFeatures />
           </div>
